@@ -15,7 +15,7 @@ def get_currencie():
                 currencie[j['Cur_Abbreviation']].append('BYN')
                 break
 
-    currencie['BYN'] = [1, 'Беларусский рубль', 1, 'Беларусский рубль', 'BYN']
+    currencie['BYN'] = [1, 'Белорусский рубль', 1, 'Белорусский рубль', 'BYN']
     sorted_tuples = sorted(currencie.items(), key=lambda item: item[1][3])
     currencie = {k: v for k, v in sorted_tuples}
     return currencie

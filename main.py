@@ -73,23 +73,25 @@ def convert(message: telebot.types.Message):
 
 @bot.callback_query_handler(func=lambda callback: True)
 def callback_message(callback):
-    if len(ls) == 0:
-        bot.send_message(callback.message.chat.id, 'Введате сумму конвертации')
-    elif len(ls) < 2:
-        ls.append(callback.data)
-        bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
-        bot.send_message(callback.message.chat.id, f'Выберите валюту в которую конвертируем из представленных выше👆')
-    elif len(ls) == 2:
-        bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
-        ls.append(callback.data)
+    try:
+        if len(ls) == 0:
+            bot.send_message(callback.message.chat.id, 'Сначала введате сумму конвертации!')
+        elif len(ls) < 2:
+            ls.append(callback.data)
+            bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
+            bot.send_message(callback.message.chat.id, f'Выберите валюту в которую конвертируем из представленных выше👆')
+        elif len(ls) == 2:
+            bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
+            ls.append(callback.data)
 
-        amount, quote, base = ls
-        total_base = CryptoConverter.get_price(quote, base, amount)
-        text = f'{amount} {quote} = {total_base} {base}\n' \
-               f'По курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S")}'
-        bot.send_message(callback.message.chat.id, text)
-        ls.clear()
-
+            amount, quote, base = ls
+            total_base = CryptoConverter.get_price(quote, base, amount)
+            text = f'{amount} {quote} = {total_base} {base}\n' \
+                   f'По курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S")}'
+            bot.send_message(callback.message.chat.id, text)
+            ls.clear()
+    except APIException:
+        bot.send_message(callback.message.chat.id, f'Я не умею конвертировать одинаковые валюты')
 
 # keep_alive() #постоянный онлайн
 # if __name__ == '__main__':
