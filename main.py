@@ -65,7 +65,7 @@ def convert(message: telebot.types.Message):
             markup.add(types.InlineKeyboardButton(
                 f'{currencie[key][3]} ({key})', callback_data=key))
         bot.send_message(message.chat.id, 'Доступные валюты:', reply_markup=markup)
-        bot.send_message(message.chat.id, 'Выберите валюту конвертации из представленных выше')
+        bot.send_message(message.chat.id, 'Выберите валюту конвертации из представленных выше👆')
     else:
         ls.clear()
         bot.send_message(message.chat.id, 'Введите сумму конвертации')
@@ -78,7 +78,7 @@ def callback_message(callback):
     elif len(ls) < 2:
         ls.append(callback.data)
         bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
-        bot.send_message(callback.message.chat.id, f'Выберите валюту в которую конвертируем из представленных выше')
+        bot.send_message(callback.message.chat.id, f'Выберите валюту в которую конвертируем из представленных выше👆')
     elif len(ls) == 2:
         bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
         ls.append(callback.data)
