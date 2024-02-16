@@ -47,7 +47,6 @@ def course(message: telebot.types.Message):
 
 @bot.message_handler(content_types=['text', ])
 def convert(message: telebot.types.Message):
-
     if message.text == 'Курсы валют':
         text = 'Курсы валют на сегодня:'
         for key in currencie:
@@ -80,7 +79,8 @@ def callback_message(callback):
         elif len(ls) < 2:
             ls.append(callback.data)
             bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
-            bot.send_message(callback.message.chat.id, f'Выберите валюту в которую конвертируем из представленных выше👆')
+            bot.send_message(callback.message.chat.id,
+                             f'Выберите валюту в которую конвертируем из представленных выше👆')
         elif len(ls) == 2:
             bot.send_message(callback.message.chat.id, f'Вы выбрали {currencie[callback.data][3]} ({callback.data})')
             ls.append(callback.data)
@@ -94,6 +94,11 @@ def callback_message(callback):
     except APIException:
         bot.send_message(callback.message.chat.id, f'Я не умею конвертировать одинаковые валюты')
 
+
 # keep_alive() #постоянный онлайн
 if __name__ == '__main__':
-    bot.polling()
+    while True:
+        try:
+            bot.polling(none_stop=True)
+        except:
+            time.sleep(1)
