@@ -40,18 +40,19 @@ def course(message: telebot.types.Message):
     text = 'Курсы валют на сегодня:'
     for key in currencie:
         text = '\n'.join((text, f'{currencie[key][0]} {currencie[key][1]} ({key}) = {currencie[key][2]} BYN'))
-    text += f'\n\nПо курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S")}'
+    text += f'\n\nПо курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S", time.gmtime(time.time() + 10800))}'
     text += '\n\nНапомнить, что я могу через команду: /help'
     bot.send_message(message.chat.id, text)
 
 
 @bot.message_handler(content_types=['text', ])
 def convert(message: telebot.types.Message):
+
     if message.text == 'Курсы валют':
         text = 'Курсы валют на сегодня:'
         for key in currencie:
             text = '\n'.join((text, f'{currencie[key][0]} {currencie[key][1]} ({key}) = {currencie[key][2]} BYN'))
-        text += f'\n\nПо курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S")}'
+        text += f'\n\nПо курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S", time.gmtime(time.time() + 10800))}'
         text += '\n\nНапомнить, что я могу через команду: /help'
         bot.send_message(message.chat.id, text)
 
@@ -87,12 +88,12 @@ def callback_message(callback):
             amount, quote, base = ls
             total_base = CryptoConverter.get_price(quote, base, amount)
             text = f'{amount} {quote} = {total_base} {base}\n' \
-                   f'По курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S")}'
+                   f'По курсу НБ РБ на {time.strftime("%d %b %Y %H:%M:%S", time.gmtime(time.time() + 10800))}'
             bot.send_message(callback.message.chat.id, text)
             ls.clear()
     except APIException:
         bot.send_message(callback.message.chat.id, f'Я не умею конвертировать одинаковые валюты')
 
 # keep_alive() #постоянный онлайн
-# if __name__ == '__main__':
-bot.polling()
+if __name__ == '__main__':
+    bot.polling()
