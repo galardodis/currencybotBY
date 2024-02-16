@@ -48,6 +48,7 @@ def course(message: telebot.types.Message):
 
 @bot.message_handler(content_types=['text', ])
 def convert(message: telebot.types.Message):
+    ls.clear()
     if message.text == 'Курсы валют':
         text = 'Курсы валют на сегодня:'
         for key in currencie:
