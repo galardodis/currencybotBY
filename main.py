@@ -3,6 +3,7 @@ import time
 from telebot import types
 from tokens import TELE_TOKEN
 from extensions_by import CryptoConverter, APIException, currencie
+import re
 from background import keep_alive  # постоянный онлайн
 
 # import bot_app_world
@@ -58,17 +59,23 @@ def convert(message: telebot.types.Message):
     elif message.text == 'Конвертация':
         bot.send_message(message.chat.id, 'Введите сумму конвертации')
 
-    elif message.text.isdigit() and len(ls) == 0:
-        ls.append(int(message.text))
-        markup = types.InlineKeyboardMarkup()
-        for key in currencie:
-            markup.add(types.InlineKeyboardButton(
-                f'{currencie[key][3]} ({key})', callback_data=key))
-        bot.send_message(message.chat.id, 'Доступные валюты:', reply_markup=markup)
-        bot.send_message(message.chat.id, 'Выберите валюту конвертации из представленных выше👆')
+    elif re.search(r"\d+[.,]?([\d]+)?", message.text) and len(ls) == 0:
+        txt = message.text
+        if ',' in txt:
+            txt = txt.replace(',', '.')
+        try:
+            ls.append(float(re.search(r"\d+[.,]?([\d]+)?", txt).group()))
+            markup = types.InlineKeyboardMarkup()
+            for key in currencie:
+                markup.add(types.InlineKeyboardButton(
+                    f'{currencie[key][3]} ({key})', callback_data=key))
+            bot.send_message(message.chat.id, 'Доступные валюты:', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Выберите валюту конвертации из представленных выше👆')
+        except:
+            ValueError
     else:
         ls.clear()
-        bot.send_message(message.chat.id, 'Введите сумму конвертации')
+        bot.send_message(message.chat.id, 'Введите корректную сумму конвертации')
 
 
 @bot.callback_query_handler(func=lambda callback: True)
